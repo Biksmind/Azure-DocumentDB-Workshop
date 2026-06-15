@@ -16,10 +16,15 @@ By the end of this module, you will be able to:
 
 ### Step 1: Open the workshop repository
 
-1. Open the repository in VS Code.
-2. Open the following files in separate tabs:
+1. Open VS Code.
+2. If you have not cloned the repo yet:
+   - Click the Source Control (or GitHub) icon.
+   - Click **Clone Repository**.
+   - Paste: `https://github.com/Biksmind/Azure-DocumentDB-Workshop.git`
+   - Choose destination: `C:\Users\lab1euser4\Azure-DocumentDB-Workshop`
+   - Click **Open** after clone completes.
+3. Open the following files in separate tabs:
    - `README.md`
-   - `WORKSHOP-RUNBOOK.md`
    - `END-TO-END-WORKSHOP-RUNBOOK.md`
 
 ### Step 2: Review the workshop scenario

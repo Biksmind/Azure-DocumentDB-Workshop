@@ -111,6 +111,28 @@ winget install --id Git.Git --exact --source winget
 
 After manual install, restart terminal and re-run the verification commands.
 
+## Before Module 1: Clone workshop repo from VS Code
+
+1. Open **VS Code**.
+2. Click the **Source Control** icon in the Activity Bar (or open the GitHub view if your lab image shows a GitHub icon).
+3. Click **Clone Repository**.
+4. Paste the public repository URL and press **Enter**:
+
+  ```text
+  https://github.com/Biksmind/Azure-DocumentDB-Workshop.git
+  ```
+
+5. When prompted for destination, select:
+
+  ```text
+  C:\Users\lab1euser4\Azure-DocumentDB-Workshop
+  ```
+
+6. Click **Select as Repository Destination**.
+7. After clone completes, click **Open** to open the repository in VS Code.
+
+You should now see the workshop files in Explorer before continuing with Module 1.
+
 ## Module 1: Create Azure DocumentDB
 
 ### 1. Open Azure Portal
@@ -294,7 +316,7 @@ show collections
 use Workshop_DB
 
 db.mobiles.insertMany([ /* paste contents of mobiles_sample.json here */ ])
-db.supportInc.insertMany([ [
+db.supportInc.insertMany([
   {
     "articleId": "KB001",
     "title": "Battery drains quickly after software update",
@@ -565,8 +587,7 @@ db.supportInc.insertMany([ [
     "content": "Missing vibration for notifications can be caused by vibration intensity set to zero, Do Not Disturb mode, or per-app notification settings. Ask the user to check vibration intensity, disable DND, and verify notification vibration is enabled for the specific app.",
     "tags": ["vibration", "notifications", "do not disturb", "haptics"]
   }
-]
- ])
+])
 db.retail_offers.insertMany([ /* paste contents of retail_offers_sample.json here */ ])
 ```
 
@@ -598,11 +619,22 @@ In `mongosh`:
 ```javascript
 use Workshop_DB
 db.mobiles.countDocuments()           // expect 30
-db.supportInc.countDocuments()  // expect 30
+db.supportInc.countDocuments()        // expect 30
 db.retail_offers.countDocuments()     // expect 30
 ```
 
 You should see 30 documents in each collection.
+
+If any count is not 30, reset and import again:
+
+```javascript
+use Workshop_DB
+db.mobiles.drop()
+db.supportInc.drop()
+db.retail_offers.drop()
+```
+
+Then re-create/import from Option A or Option B and verify counts again.
 
 > **Note:** The sample documents match the complete workshop dataset (30 mobiles, 30 support articles, 30 retail offers). You can skip the Module 3 data load script if you have already imported these files. If you run the script anyway, it will re-insert documents and may create duplicates.
 >
@@ -624,7 +656,7 @@ Open PowerShell and go to the folder where you cloned this repository.
 Example:
 
 ```powershell
-cd C:\Users\\source\repos\DocumentDB-Workshop
+cd C:\Users\lab1euser4\Azure-DocumentDB-Workshop
 ```
 
 Check that you are in the right folder:
@@ -637,7 +669,6 @@ You should see:
 
 ```text
 README.md
-WORKSHOP-RUNBOOK.md
 1-Introduction
 2-NoSQL-Core-Concepts
 3-AI-Vector-Search
