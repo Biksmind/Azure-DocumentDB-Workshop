@@ -136,8 +136,6 @@ def main() -> None:
     print(f"  support_articles count: {db.support_articles.count_documents({})}")
     print(f"  retail_offers count: {db.retail_offers.count_documents({})}")
 
-    print("\nNo indexes created. Students will create indexes during hands-on exercises.")
-
     client.close()
     print("\nBase workshop data load complete.")
 
