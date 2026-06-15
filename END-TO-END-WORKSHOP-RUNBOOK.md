@@ -916,7 +916,9 @@ Before performing any migration, run a compatibility assessment against Azure Do
 1. Right-click the MongoDB cluster.
 2. Select **Data Migration**.
 3. If prompted, install the **Azure DocumentDB Migration** extension.
-4. After installation, select **Pre-Migration Assessment for Azure DocumentDB**.
+4. After installation completes, right-click the MongoDB cluster again.
+5. Select **Data Migration** again.
+6. Select **Pre-Migration Assessment for Azure DocumentDB**.
 
 ### Validate Source Environment
 
@@ -1266,33 +1268,49 @@ At the end of this lab, you will have successfully:
 
 This demonstrates a complete MongoDB to Azure DocumentDB migration workflow using Azure Database Migration Service (DMS) and the Azure DocumentDB VS Code Migration Extension.
 
-## Module 4A: Use pre-generated embeddings
+## Module 4A: Load data, generate embeddings, and create indexes
 
-Embedding files are already included in this workshop. You do not need to generate them.
-
-From the repository root, confirm the files exist:
-
-```powershell
-Get-ChildItem .\3-AI-Vector-Search\mobile-data\mobiles_with_vectors.json
-Get-ChildItem .\3-AI-Vector-Search\mobile-data\query_embeddings.json
-Get-ChildItem .\3-AI-Vector-Search\support-data\support_articles_with_vectors.json
-```
-
-If all three files are present, continue to data load.
-
-## Module 4A: Load data and create indexes
+### 1. Load base workshop data
 
 Run:
 
 ```powershell
-python .\scripts\load_workshop_data.py
+python .\scripts\load_workshop_data_base.py
 ```
 
-The script loads:
+This loads:
 
 - `mobiles`
 - `support_articles`
 - `retail_offers`
+
+### 2. Generate embeddings
+
+Before running this step, ensure `.env` has valid Azure OpenAI values:
+
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_API_KEY`
+- `AZURE_OPENAI_API_VERSION`
+- `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
+
+Run:
+
+```powershell
+python .\scripts\generate_workshop_embeddings.py
+```
+
+This writes `contentVector` to documents in:
+
+- `mobiles`
+- `support_articles`
+
+### 3. Create indexes
+
+Run:
+
+```powershell
+python .\scripts\create_workshop_indexes.py
+```
 
 The script creates:
 
@@ -1300,11 +1318,9 @@ The script creates:
 - `vector_index`
 - `support_text_index`
 - `support_vector_index`
-- `mobile_brand_index`
-- `mobile_segment_index`
-- `mobile_price_index`
 - `offer_title_index`
 - `offer_retailer_index`
+- `offer_availability_index`
 
 If this fails with a network or timeout error:
 
@@ -1316,7 +1332,9 @@ If this fails with a network or timeout error:
 6. Wait 30 seconds.
 7. Run the script again.
 
-Validate:
+### 4. Validate setup
+
+Run:
 
 ```powershell
 python .\scripts\validate_workshop_setup.py

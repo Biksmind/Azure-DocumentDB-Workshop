@@ -42,7 +42,7 @@ def main() -> None:
 
     checks = [
         ("mobiles collection has 30 documents", mobiles_count == 30),
-        ("support_articles collection has 18 documents", support_count == 18),
+        ("support_articles collection has 30 documents", support_count == 30),
         ("retail_offers collection has 30 documents", offers_count == 30),
         ("mobile_text_index exists", "mobile_text_index" in mobile_indexes),
         ("vector_index exists", "vector_index" in mobile_indexes),
@@ -50,6 +50,7 @@ def main() -> None:
         ("support_vector_index exists", "support_vector_index" in support_indexes),
         ("offer_title_index exists", "offer_title_index" in offer_indexes),
         ("offer_retailer_index exists", "offer_retailer_index" in offer_indexes),
+        ("offer_availability_index exists", "offer_availability_index" in offer_indexes),
     ]
 
     print("\nChecks:")
@@ -67,7 +68,12 @@ def main() -> None:
     client.close()
 
     if failed:
-        raise SystemExit("\nValidation failed. Re-run: python scripts\\load_workshop_data.py")
+        raise SystemExit(
+            "\nValidation failed. Re-run in order:\n"
+            "  python scripts\\load_workshop_data_base.py\n"
+            "  python scripts\\generate_workshop_embeddings.py\n"
+            "  python scripts\\create_workshop_indexes.py"
+        )
 
     print("\nWorkshop setup validation passed.")
 

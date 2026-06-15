@@ -47,7 +47,9 @@ Before performing any migration, we will run a compatibility assessment against 
 1. Right-click the MongoDB cluster.
 2. Select **Data Migration**.
 3. If prompted, install the **Azure DocumentDB Migration** extension.
-4. After installation, select:
+4. After installation completes, right-click the MongoDB cluster again.
+5. Select **Data Migration** again.
+6. Select:
 
    **Pre-Migration Assessment for Azure DocumentDB**
 
