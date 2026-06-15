@@ -2905,6 +2905,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_ai_agents.ps1
 ```
 
 These scripts will clone `DocumentDB_Workshop_0906` automatically (if missing) and start the agents app.
+On first run, the Python launcher also installs required companion repo dependencies.
 
 If the browser opens automatically, use it.
 

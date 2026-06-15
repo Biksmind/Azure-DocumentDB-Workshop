@@ -20,7 +20,18 @@ def run_command(args: list[str], cwd: Path | None = None) -> None:
     subprocess.run(args, cwd=str(cwd) if cwd else None, check=True)
 
 
+def module_available(python_exe: str, module_name: str) -> bool:
+    result = subprocess.run(
+        [python_exe, "-c", f"import {module_name}"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return result.returncode == 0
+
+
 def main() -> int:
+    python_exe = sys.executable
     script_dir = Path(__file__).resolve().parent
     repo_root = script_dir.parent
     parent_dir = repo_root.parent
@@ -28,7 +39,6 @@ def main() -> int:
     agents_app_dir = companion_repo / AGENTS_RELATIVE_PATH
 
     try:
-        ensure_command_exists("python")
         ensure_command_exists("git")
 
         if not companion_repo.exists():
@@ -38,8 +48,17 @@ def main() -> int:
         if not agents_app_dir.exists():
             raise RuntimeError(f"AI agents app path not found: {agents_app_dir}")
 
+        # First run on a new machine may miss required Python deps for the companion app.
+        if not module_available(python_exe, "dotenv"):
+            requirements_file = companion_repo / "requirements.txt"
+            if not requirements_file.exists():
+                raise RuntimeError(f"requirements.txt not found: {requirements_file}")
+
+            print("Installing companion repo dependencies...")
+            run_command([python_exe, "-m", "pip", "install", "-r", str(requirements_file)], cwd=companion_repo)
+
         print(f"Starting AI agents app from: {agents_app_dir}")
-        run_command(["python", "app.py"], cwd=agents_app_dir)
+        run_command([python_exe, "app.py"], cwd=agents_app_dir)
         return 0
     except Exception as exc:  # noqa: BLE001
         print(f"Error: {exc}", file=sys.stderr)
