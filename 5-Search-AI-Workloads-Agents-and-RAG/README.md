@@ -1569,3 +1569,4 @@ Vector Search helps when the user describes the same meaning using different wor
 RAG uses Vector Search to retrieve relevant business data and then uses an LLM to generate a grounded answer.
 
 This is the foundation for building modern AI-native applications on Azure DocumentDB.
+
