@@ -41,6 +41,8 @@ Introduction and architecture
 
 Each module includes a step-by-step hands-on README.
 
+> Note: Original workshop folders are archived under `legacy-modules/` for reference assets. The primary learning path is the 5 modules listed above.
+
 ## End-to-end run order
 
 Follow modules in this exact order:
@@ -64,10 +66,10 @@ For vector search, use Azure DocumentDB M30 or higher.
 
 ## Existing technical asset folders
 
-The repository also contains implementation assets used by module steps:
+The repository also contains original implementation assets used by module steps:
 
-- `3-AI-Vector-Search/`
-- `4-AI-Agents/`
+- `legacy-modules/3-AI-Vector-Search/`
+- `legacy-modules/4-AI-Agents/`
 - `scripts/`
 - `sample-docs/`
 

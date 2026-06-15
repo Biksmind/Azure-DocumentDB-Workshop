@@ -48,7 +48,7 @@ db.mobiles.find(
 
 ### Step 3: Run vector search
 
-Open `3-AI-Vector-Search/mobile-data/query_embeddings.json`, copy one query embedding, then run:
+Open `legacy-modules/3-AI-Vector-Search/mobile-data/query_embeddings.json`, copy one query embedding, then run:
 
 ```javascript
 const queryVector = [/* paste embedding array here */]
@@ -107,7 +107,7 @@ db.mobiles.aggregate([
 ### Step 5: Run full-text/vector/hybrid in support app
 
 ```powershell
-python .\3-AI-Vector-Search\support-search-app\app.py
+python .\legacy-modules\3-AI-Vector-Search\support-search-app\app.py
 ```
 
 Open `http://localhost:5050` and run the same query in:
@@ -119,7 +119,7 @@ Open `http://localhost:5050` and run the same query in:
 ### Step 6: Launch AI agents
 
 ```powershell
-cd .\4-AI-Agents\mobile-agents
+cd .\legacy-modules\4-AI-Agents\mobile-agents
 python app.py
 ```
 
@@ -142,7 +142,7 @@ User question
 
 ### Step 8: MCP + GitHub Copilot update segment
 
-1. Review tool boundaries in `4-AI-Agents/mobile-agents/mobile_tools.py`.
+1. Review tool boundaries in `legacy-modules/4-AI-Agents/mobile-agents/mobile_tools.py`.
 2. Use GitHub Copilot prompts for wrapper/test scaffolding.
 3. Capture latest updates and action items.
 
