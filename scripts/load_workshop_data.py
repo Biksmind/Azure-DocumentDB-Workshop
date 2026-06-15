@@ -2,10 +2,10 @@
 
 This is the copy-paste friendly setup path for attendees.
 
-It loads:
-  - 3-AI-Vector-Search/mobile-data/mobiles_with_vectors.json -> mobiles
-  - 3-AI-Vector-Search/support-data/support_articles_with_vectors.json -> support_articles
-  - 4-AI-Agents/mobile-agents/retail_offers.json -> retail_offers
+It loads (first available source):
+    - mobiles: pre-generated vectors file, else sample-docs/mobiles_sample.json
+    - support articles: pre-generated vectors file, else sample-docs/support_articles_sample.json
+    - retail offers: 4-AI-Agents/mobile-agents/retail_offers.json, else sample-docs/retail_offers_sample.json
 
 It creates:
   - mobile_text_index on title, brand, segment, description, features, useCases
@@ -42,19 +42,8 @@ def require_env(name: str) -> str:
 
 def load_json(path: Path) -> list[dict]:
     if not path.exists():
-        if "support-data" in str(path):
-            raise FileNotFoundError(
-                f"Required support vector file not found: {path}\n"
-                "Run this first:\n"
-                "  python .\\3-AI-Vector-Search\\support-data\\generate_support_embeddings.py\n"
-                "Then rerun:\n"
-                "  python .\\scripts\\load_workshop_data.py"
-            )
         raise FileNotFoundError(
-            f"Required data file not found: {path}\n"
-            "If this is the vector file, run:\n"
-            "  python .\\3-AI-Vector-Search\\mobile-data\\generate_mobile_embeddings.py\n"
-            "  python .\\3-AI-Vector-Search\\mobile-data\\generate_query_embeddings.py"
+            f"Required data file not found: {path}"
         )
     with path.open("r", encoding="utf-8") as file:
         data = json.load(file)
@@ -120,14 +109,40 @@ def create_vector_index(db, collection_name: str, field_name: str, index_name: s
         raise
 
 
+def first_existing_path(*paths: Path) -> Path:
+    for path in paths:
+        if path.exists():
+            return path
+    candidates = "\n".join(f"  - {path}" for path in paths)
+    raise FileNotFoundError(
+        "No valid data file found. Checked:\n"
+        f"{candidates}\n"
+        "Ensure the workshop repository is complete, then rerun:\n"
+        "  python .\\scripts\\load_workshop_data.py"
+    )
+
+
+def has_field(documents: list[dict], field_name: str) -> bool:
+    return any(field_name in document and document[field_name] is not None for document in documents)
+
+
 def main() -> None:
     connection_string = require_env("DOCUMENTDB_CONNECTION_STRING")
     database_name = os.getenv("DOCUMENTDB_DATABASE", "Workshop_DB")
     dimensions = int(os.getenv("EMBEDDING_DIMENSIONS", "256"))
 
-    mobiles_path = ROOT_DIR / "3-AI-Vector-Search" / "mobile-data" / "mobiles_with_vectors.json"
-    support_path = ROOT_DIR / "3-AI-Vector-Search" / "support-data" / "support_articles_with_vectors.json"
-    offers_path = ROOT_DIR / "4-AI-Agents" / "mobile-agents" / "retail_offers.json"
+    mobiles_path = first_existing_path(
+        ROOT_DIR / "3-AI-Vector-Search" / "mobile-data" / "mobiles_with_vectors.json",
+        ROOT_DIR / "sample-docs" / "mobiles_sample.json",
+    )
+    support_path = first_existing_path(
+        ROOT_DIR / "3-AI-Vector-Search" / "support-data" / "support_articles_with_vectors.json",
+        ROOT_DIR / "sample-docs" / "support_articles_sample.json",
+    )
+    offers_path = first_existing_path(
+        ROOT_DIR / "4-AI-Agents" / "mobile-agents" / "retail_offers.json",
+        ROOT_DIR / "sample-docs" / "retail_offers_sample.json",
+    )
 
     print("Connecting to Azure DocumentDB...")
     client = MongoClient(connection_string)
@@ -135,6 +150,7 @@ def main() -> None:
 
     print(f"Loading mobiles from {mobiles_path}...")
     mobiles = load_json(mobiles_path)
+    mobiles_have_vectors = has_field(mobiles, "contentVector")
     mobiles_written = upsert_by_title(db.mobiles, mobiles)
     print(f"Loaded or updated {mobiles_written} mobile documents in {database_name}.mobiles")
 
@@ -158,11 +174,15 @@ def main() -> None:
     db.mobiles.create_index("priceInr", name="mobile_price_index")
     db.mobiles.create_index("rating", name="mobile_rating_index")
 
-    print("Creating DiskANN vector index on mobiles.contentVector...")
-    create_vector_index(db, "mobiles", "contentVector", "vector_index", dimensions)
+    if mobiles_have_vectors:
+        print("Creating DiskANN vector index on mobiles.contentVector...")
+        create_vector_index(db, "mobiles", "contentVector", "vector_index", dimensions)
+    else:
+        print("Skipping mobiles vector index: contentVector not present in loaded data.")
 
     print(f"Loading support articles from {support_path}...")
     support_articles = load_json(support_path)
+    support_have_vectors = has_field(support_articles, "contentVector")
     support_written = upsert_by_article_id(db.support_articles, support_articles)
     print(
         f"Loaded or updated {support_written} support articles "
@@ -188,14 +208,17 @@ def main() -> None:
     db.support_articles.create_index("product", name="support_product_index")
     db.support_articles.create_index("severity", name="support_severity_index")
 
-    print("Creating DiskANN vector index on support_articles.contentVector...")
-    create_vector_index(
-        db,
-        "support_articles",
-        "contentVector",
-        "support_vector_index",
-        dimensions,
-    )
+    if support_have_vectors:
+        print("Creating DiskANN vector index on support_articles.contentVector...")
+        create_vector_index(
+            db,
+            "support_articles",
+            "contentVector",
+            "support_vector_index",
+            dimensions,
+        )
+    else:
+        print("Skipping support_articles vector index: contentVector not present in loaded data.")
 
     print(f"Loading retail offers from {offers_path}...")
     offers = load_json(offers_path)
