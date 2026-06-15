@@ -79,59 +79,42 @@ Create Azure resources
 3. Sign in with your Azure account.
 4. Wait until the Azure Portal home page is fully loaded.
 
-### 2. Create a resource group
-
-If you already have a workshop resource group, you can use it. Otherwise:
-
-1. In the top search bar, type:
-
-   ```text
-   Resource groups
-   ```
-
-2. Click **Resource groups**.
-3. Click **Create**.
-4. Select your **Subscription**.
-5. For **Resource group name**, enter:
-
-   ```text
-   rg-az-documentdb-workshop
-   ```
-
-6. Select a region close to you.
-7. Click **Review + create**.
-8. Click **Create**.
-
-### 3. Create the Azure DocumentDB cluster
+### 2. Start Azure DocumentDB creation directly
 
 1. In Azure Portal, use the top search bar.
 2. Type:
 
-   ```text
-   Azure DocumentDB
-   ```
+  ```text
+  Azure DocumentDB
+  ```
 
 3. Click **Azure DocumentDB** from the search results.
 4. Click **Create**.
-5. If the portal shows multiple options, choose **Azure DocumentDB** or **Azure DocumentDB with MongoDB compatibility**.
-6. Fill in the Basics page:
+5. On the Basics page, for **Resource group**:
+  - Select an existing resource group if you already have one.
+  - If you do not have one, click **Create new** and create it during this flow in **Central India** region.
+
+### 3. Create the Azure DocumentDB cluster
+
+1. If the portal shows multiple options, choose **Azure DocumentDB** or **Azure DocumentDB with MongoDB compatibility**.
+2. Fill in the Basics page:
 
    | Field | Value |
    |---|---|
    | Subscription | Select your subscription |
-   | Resource group | `rg-az-documentdb-workshop` |
+  | Resource group | Select existing, or create new in this flow |
    | Cluster name | Use a globally unique name, for example `az-docdb-workshop-<yourname>` |
-   | Region | Choose a region close to you |
+  | Region | `Central India` |
    | MongoDB version | Latest available version |
    | High availability | Disabled for the workshop |
    | Cluster tier | M30 or higher |
    | Storage | Default value |
 
-7. Click **Review + create**.
-8. Wait for validation to pass.
-9. Click **Create**.
-10. Wait for deployment to complete. This can take 10-15 minutes.
-11. When deployment is complete, click **Go to resource**.
+3. Click **Review + create**.
+4. Wait for validation to pass.
+5. Click **Create**.
+6. Wait for deployment to complete. This can take 10-15 minutes.
+7. When deployment is complete, click **Go to resource**.
 
 ### 4. Configure networking
 
