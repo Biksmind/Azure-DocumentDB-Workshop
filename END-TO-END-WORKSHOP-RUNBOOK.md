@@ -2892,13 +2892,19 @@ This is the foundation for building modern AI-native applications on Azure Docum
 
 ## Module 4B: Run AI agents
 
-From PowerShell at this repository root, run:
+From this repository root, run:
+
+```powershell
+python .\scripts\run_ai_agents.py
+```
+
+Or if you prefer PowerShell script:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\run_ai_agents.ps1
 ```
 
-This script will clone `DocumentDB_Workshop_0906` automatically (if missing) and start the agents app.
+These scripts will clone `DocumentDB_Workshop_0906` automatically (if missing) and start the agents app.
 
 If the browser opens automatically, use it.
 
