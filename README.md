@@ -2,6 +2,14 @@
 
 This repository is organized as an end-to-end, slot-wise workshop path.
 
+## Start here
+
+If you are attending or running the workshop, start with the end-to-end runbook:
+
+- [END-TO-END-WORKSHOP-RUNBOOK.md](END-TO-END-WORKSHOP-RUNBOOK.md)
+
+This runbook covers all modules with step-by-step hands-on details from setup to migration, search, agents, and wrap-up.
+
 ## What we are building
 
 You will build and validate this complete flow:
