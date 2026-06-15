@@ -145,16 +145,14 @@ After manual install, restart terminal and re-run the verification commands.
 1. If the portal shows multiple options, choose **Azure DocumentDB** or **Azure DocumentDB with MongoDB compatibility**.
 2. Fill in the Basics page:
 
-   | Field | Value |
-   |---|---|
-   | Subscription | Select your subscription |
-  | Resource group | Select existing, or create new in this flow |
-  | Cluster name | Use a globally unique name, for example `az-docdb-workshop-<yourname>` |
-  | Region | `Central India` for IST or `East US` for PST |
-   | MongoDB version | Latest available version |
-   | High availability | Disabled for the workshop |
-  | Cluster tier | Click **Configure** and keep the default compute (2 cores / 8 GB RAM) |
-  | Storage | Change to **128 GB** |
+  - Subscription: Select your subscription.
+  - Resource group: Select existing, or create new in this flow.
+  - Cluster name: Use a globally unique name, for example az-docdb-workshop-yourname.
+  - Region: Central India for IST or East US for PST.
+  - MongoDB version: Latest available version.
+  - High availability: Disabled for the workshop.
+  - Cluster tier: Click **Configure** and keep the default compute (2 cores / 8 GB RAM).
+  - Storage: Change to **128 GB**.
 
 3. Click **Review + create**.
 4. Wait for validation to pass.
@@ -745,6 +743,86 @@ db.runCommand({ ping: 1 })
 ```
 
 You should see `{ ok: 1 }`.
+
+### 1. Confirm data is present
+
+Run:
+
+```javascript
+show collections
+db.mobiles.countDocuments()
+db.support_articles.countDocuments()
+db.retail_offers.countDocuments()
+```
+
+Expected:
+
+- Collections include `mobiles`, `support_articles`, and `retail_offers`.
+- Each collection should have records (typically 30 each when sample data is loaded).
+
+### 2. Run a basic `find` query
+
+Run:
+
+```javascript
+db.mobiles.find(
+  { category: "Premium" },
+  { _id: 0, name: 1, brand: 1, price: 1, category: 1 }
+).limit(5)
+```
+
+This validates that filtering and projection are working.
+
+### 3. Run an `aggregate` query
+
+Run:
+
+```javascript
+db.mobiles.aggregate([
+  { $group: { _id: "$category", avgPrice: { $avg: "$price" }, total: { $sum: 1 } } },
+  { $sort: { avgPrice: -1 } }
+])
+```
+
+This validates aggregation, grouping, and sorting behavior.
+
+### 4. Capture explain plan before index
+
+Run:
+
+```javascript
+db.mobiles.find({ category: "Premium" }).explain("executionStats")
+```
+
+Check in the output:
+
+- Query plan shape (often collection scan before creating index).
+- `totalDocsExamined` and `nReturned` values.
+
+### 5. Create index and validate impact
+
+Create index:
+
+```javascript
+db.mobiles.createIndex({ category: 1 }, { name: "idx_category" })
+```
+
+Run explain again:
+
+```javascript
+db.mobiles.find({ category: "Premium" }).explain("executionStats")
+```
+
+Verify:
+
+- Plan now uses index scan for the filter.
+- `totalDocsExamined` should reduce compared to pre-index run.
+
+List indexes:
+
+```javascript
+db.mobiles.getIndexes()
+```
 
 Exit `mongosh` for now:
 
