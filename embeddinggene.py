@@ -9,6 +9,8 @@ from pymongo import MongoClient
 ROOT_DIR = Path(__file__).resolve().parent
 load_dotenv(ROOT_DIR / ".env")
 
+COLLECTION_NAME = "supportInc"
+
 
 def require_env(name: str) -> str:
     value = os.getenv(name)
@@ -16,6 +18,14 @@ def require_env(name: str) -> str:
         raise RuntimeError(
             f"Missing required environment variable: {name}. "
             f"Update .env in {ROOT_DIR} and rerun."
+        )
+    if value.startswith("<") and value.endswith(">"):
+        raise RuntimeError(
+            f"{name} is still a placeholder in .env. Replace it with a real value and rerun."
+        )
+    if value.strip() in {'""', "''"}:
+        raise RuntimeError(
+            f"{name} is empty in .env. Replace it with a real value and rerun."
         )
     return value
 

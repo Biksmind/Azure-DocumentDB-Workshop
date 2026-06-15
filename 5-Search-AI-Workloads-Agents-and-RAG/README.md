@@ -423,6 +423,8 @@ Before running it, make sure `.env` contains:
 - `AZURE_OPENAI_API_VERSION`
 - `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
 
+Replace any placeholder values like `<your-documentdb-connection-string>` before running the script.
+
 Store the vector in:
 
 ```text
