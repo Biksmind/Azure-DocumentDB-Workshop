@@ -751,8 +751,10 @@ If you dropped collections earlier, load data again before running queries.
 Run from the repository root (with your virtual environment active):
 
 ```powershell
-python .\scripts\load_workshop_data.py
+python .\scripts\load_workshop_data_base.py
 ```
+
+This script loads data only, without any indexes. You will create indexes manually in Steps 5–6.
 
 This script loads or updates:
 
