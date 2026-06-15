@@ -136,7 +136,7 @@ After manual install, restart terminal and re-run the verification commands.
 4. Click **Create**.
 5. On the Basics page, for **Resource group**:
   - Select an existing resource group if you already have one.
-  - If you do not have one, click **Create new** and create it during this flow in **Central India** region.
+  - If you do not have one, click **Create new** and create it during this flow in the region that matches your workshop time zone: **Central India** for IST or **East US** for PST. If you are unsure, confirm with the speakers or sponsors.
 
 ### 3. Create the Azure DocumentDB cluster
 
@@ -147,12 +147,12 @@ After manual install, restart terminal and re-run the verification commands.
    |---|---|
    | Subscription | Select your subscription |
   | Resource group | Select existing, or create new in this flow |
-   | Cluster name | Use a globally unique name, for example `az-docdb-workshop-<yourname>` |
-  | Region | `Central India` |
+  | Cluster name | Use a globally unique name, for example `az-docdb-workshop-<yourname>` |
+  | Region | `Central India` for IST or `East US` for PST |
    | MongoDB version | Latest available version |
    | High availability | Disabled for the workshop |
-   | Cluster tier | M30 or higher |
-   | Storage | Default value |
+  | Cluster tier | Click **Configure** and keep the default compute (2 cores / 8 GB RAM) |
+  | Storage | Change to **128 GB** |
 
 3. Click **Review + create**.
 4. Wait for validation to pass.
