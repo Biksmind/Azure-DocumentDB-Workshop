@@ -168,11 +168,7 @@ def main() -> None:
     )
     print("Created text index: mobiles.mobile_text_index")
 
-    print("Creating supporting filter indexes on mobiles...")
-    db.mobiles.create_index("brand", name="mobile_brand_index")
-    db.mobiles.create_index("segment", name="mobile_segment_index")
-    db.mobiles.create_index("priceInr", name="mobile_price_index")
-    db.mobiles.create_index("rating", name="mobile_rating_index")
+    print("Skipping filter indexes on mobiles (students will create these during Module 2 indexing exercise)")
 
     if mobiles_have_vectors:
         print("Creating DiskANN vector index on mobiles.contentVector...")
@@ -202,11 +198,7 @@ def main() -> None:
     )
     print("Created text index: support_articles.support_text_index")
 
-    print("Creating support article filter indexes...")
-    db.support_articles.create_index("articleId", name="support_article_id_index", unique=True)
-    db.support_articles.create_index("category", name="support_category_index")
-    db.support_articles.create_index("product", name="support_product_index")
-    db.support_articles.create_index("severity", name="support_severity_index")
+    print("Skipping support article filter indexes (students will create these during hands-on exercises)")
 
     if support_have_vectors:
         print("Creating DiskANN vector index on support_articles.contentVector...")
@@ -229,11 +221,7 @@ def main() -> None:
     db.retail_offers.create_index("title", name="offer_title_index", unique=True)
     db.retail_offers.create_index("offers.retailer", name="offer_retailer_index")
     db.retail_offers.create_index("offers.availability", name="offer_availability_index")
-    print("Created retail offer lookup indexes")
-
-    print("\nVerification:")
-    print(f"  Database: {database_name}")
-    print(f"  mobiles count: {db.mobiles.count_documents({})}")
+    print("Skipping retail offer indexes (students will create these during hands-on exercises)_documents({})}")
     print(f"  support_articles count: {db.support_articles.count_documents({})}")
     print(f"  retail_offers count: {db.retail_offers.count_documents({})}")
     print("  mobile indexes:")
