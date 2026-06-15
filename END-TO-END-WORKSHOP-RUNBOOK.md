@@ -744,7 +744,23 @@ db.runCommand({ ping: 1 })
 
 You should see `{ ok: 1 }`.
 
-### 1. Confirm data is present
+### 1. Load workshop data (required before query checks)
+
+If you dropped collections earlier, load data again before running queries.
+
+Run from the repository root (with your virtual environment active):
+
+```powershell
+python .\scripts\load_workshop_data.py
+```
+
+This script loads or updates:
+
+- `mobiles`
+- `support_articles`
+- `retail_offers`
+
+### 2. Confirm data is present
 
 Run:
 
@@ -760,7 +776,7 @@ Expected:
 - Collections include `mobiles`, `support_articles`, and `retail_offers`.
 - Each collection should have records (typically 30 each when sample data is loaded).
 
-### 2. Run a basic `find` query
+### 3. Run a basic `find` query
 
 Run:
 
@@ -773,7 +789,7 @@ db.mobiles.find(
 
 This validates that filtering and projection are working.
 
-### 3. Run an `aggregate` query
+### 4. Run an `aggregate` query
 
 Run:
 
@@ -786,7 +802,7 @@ db.mobiles.aggregate([
 
 This validates aggregation, grouping, and sorting behavior.
 
-### 4. Capture explain plan before index
+### 5. Capture explain plan before index
 
 Run:
 
@@ -799,7 +815,7 @@ Check in the output:
 - Query plan shape (often collection scan before creating index).
 - `totalDocsExamined` and `nReturned` values.
 
-### 5. Create index and validate impact
+### 6. Create index and validate impact
 
 Create index:
 
