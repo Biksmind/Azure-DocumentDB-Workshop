@@ -2892,10 +2892,21 @@ This is the foundation for building modern AI-native applications on Azure Docum
 
 ## Module 4B: Run AI agents
 
+The AI agents app files are in the companion repository `DocumentDB_Workshop_0906`.
+
 From PowerShell, go to the mobile agents folder:
 
 ```powershell
-cd .\4-AI-Agents\mobile-agents
+cd ..\DocumentDB_Workshop_0906\4-AI-Agents\mobile-agents
+python app.py
+```
+
+If `DocumentDB_Workshop_0906` is not present beside this repository, clone it first:
+
+```powershell
+cd ..
+git clone https://github.com/Biksmind/DocumentDB_Workshop_0906.git
+cd .\DocumentDB_Workshop_0906\4-AI-Agents\mobile-agents
 python app.py
 ```
 
@@ -2960,7 +2971,7 @@ Ctrl+C
 Return to the repository root:
 
 ```powershell
-cd ..\..
+cd ..\..\..\Azure-DocumentDB-Workshop
 ```
 
 ## Extended Module 5: Performance checks
