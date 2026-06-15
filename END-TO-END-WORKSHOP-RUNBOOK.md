@@ -65,6 +65,50 @@ Create Azure resources
 6. Extended module: Performance
 7. Extended module: Security
 
+## Before Module 1: Verify prerequisites (install only if missing)
+
+Run these checks in PowerShell:
+
+```powershell
+code --version
+python --version
+mongosh --version
+git --version
+```
+
+### How to read the result
+
+- If all commands return versions, continue to Module 1.
+- If any command shows "not recognized" or "command not found", install prerequisites before continuing.
+
+### Quick install on workshop VM (recommended)
+
+From repository root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install_vm_prerequisites.ps1
+```
+
+Then open a new PowerShell terminal and run verification again:
+
+```powershell
+code --version
+python --version
+mongosh --version
+git --version
+```
+
+### Manual install (if script is not available)
+
+```powershell
+winget install --id Microsoft.VisualStudioCode --exact --source winget
+winget install --id Python.Python.3.10 --exact --source winget
+winget install --id MongoDB.Shell --exact --source winget
+winget install --id Git.Git --exact --source winget
+```
+
+After manual install, restart terminal and re-run the verification commands.
+
 ## Module 1: Create Azure DocumentDB
 
 ### 1. Open Azure Portal
