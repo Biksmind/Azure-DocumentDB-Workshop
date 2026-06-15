@@ -782,8 +782,8 @@ Run:
 
 ```javascript
 db.mobiles.find(
-  { category: "Premium" },
-  { _id: 0, name: 1, brand: 1, price: 1, category: 1 }
+  { segment: "Premium" },
+  { _id: 0, title: 1, brand: 1, priceInr: 1, segment: 1 }
 ).limit(5)
 ```
 
@@ -795,7 +795,7 @@ Run:
 
 ```javascript
 db.mobiles.aggregate([
-  { $group: { _id: "$category", avgPrice: { $avg: "$price" }, total: { $sum: 1 } } },
+  { $group: { _id: "$segment", avgPrice: { $avg: "$priceInr" }, total: { $sum: 1 } } },
   { $sort: { avgPrice: -1 } }
 ])
 ```
@@ -807,7 +807,7 @@ This validates aggregation, grouping, and sorting behavior.
 Run:
 
 ```javascript
-db.mobiles.find({ category: "Premium" }).explain("executionStats")
+db.mobiles.find({ segment: "Premium" }).explain("executionStats")
 ```
 
 Check in the output:
@@ -820,13 +820,13 @@ Check in the output:
 Create index:
 
 ```javascript
-db.mobiles.createIndex({ category: 1 }, { name: "idx_category" })
+db.mobiles.createIndex({ segment: 1 }, { name: "idx_segment" })
 ```
 
 Run explain again:
 
 ```javascript
-db.mobiles.find({ category: "Premium" }).explain("executionStats")
+db.mobiles.find({ segment: "Premium" }).explain("executionStats")
 ```
 
 Verify:
