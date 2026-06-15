@@ -1,70 +1,79 @@
-from pymongo import MongoClient
-from openai import AzureOpenAI
+from pathlib import Path
 import os
 
-# -----------------------------
-# Azure OpenAI Configuration
-# -----------------------------
-AZURE_OPENAI_ENDPOINT = "https://<your-openai-resource>.openai.azure.com/"
-AZURE_OPENAI_KEY = "<your-azure-openai-key>"
-AZURE_OPENAI_API_VERSION = "2024-02-01"
-EMBEDDING_DEPLOYMENT = "text-embedding-3-small"  
-# example: text-embedding-3-small
-
-# -----------------------------
-# Azure DocumentDB Connection
-# -----------------------------
-MONGO_URI = "<your-documentdb-connection-string>"
-
-DB_NAME = "Workshop_DB"
-COLLECTION_NAME = "supportInc"
-
-# -----------------------------
-# Clients
-# -----------------------------
-openai_client = AzureOpenAI(
-    azure_endpoint=AZURE_OPENAI_ENDPOINT,
-    api_key=AZURE_OPENAI_KEY,
-    api_version=AZURE_OPENAI_API_VERSION
-)
-
-mongo_client = MongoClient(MONGO_URI)
-collection = mongo_client[DB_NAME][COLLECTION_NAME]
+from dotenv import load_dotenv
+from openai import AzureOpenAI
+from pymongo import MongoClient
 
 
-def generate_embedding(text: str):
-    response = openai_client.embeddings.create(
-        model=EMBEDDING_DEPLOYMENT,
+ROOT_DIR = Path(__file__).resolve().parent
+load_dotenv(ROOT_DIR / ".env")
+
+
+def require_env(name: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(
+            f"Missing required environment variable: {name}. "
+            f"Update .env in {ROOT_DIR} and rerun."
+        )
+    return value
+
+
+def generate_embedding(client: AzureOpenAI, deployment: str, text: str):
+    response = client.embeddings.create(
+        model=deployment,
         input=text
     )
     return response.data[0].embedding
 
 
-# -----------------------------
-# Generate and update embeddings
-# -----------------------------
-tickets = collection.find({})
+def main():
+    mongo_uri = require_env("DOCUMENTDB_CONNECTION_STRING")
+    database_name = os.getenv("DOCUMENTDB_DATABASE", "Workshop_DB")
+    endpoint = require_env("AZURE_OPENAI_ENDPOINT")
+    api_key = require_env("AZURE_OPENAI_API_KEY")
+    api_version = require_env("AZURE_OPENAI_API_VERSION")
+    embedding_deployment = require_env("AZURE_OPENAI_EMBEDDING_DEPLOYMENT")
 
-for ticket in tickets:
-    text_for_embedding = f"""
-    Title: {ticket.get('title', '')}
-    Description: {ticket.get('description', '')}
-    Category: {ticket.get('category', '')}
-    Priority: {ticket.get('priority', '')}
-    """
-
-    embedding = generate_embedding(text_for_embedding)
-
-    collection.update_one(
-        {"_id": ticket["_id"]},
-        {
-            "$set": {
-                "embedding": embedding,
-                "embeddingText": text_for_embedding.strip()
-            }
-        }
+    openai_client = AzureOpenAI(
+        azure_endpoint=endpoint,
+        api_key=api_key,
+        api_version=api_version,
     )
 
-    print(f"Updated embedding for {ticket['ticketId']}")
+    mongo_client = MongoClient(mongo_uri)
+    collection = mongo_client[database_name][COLLECTION_NAME]
 
-print("All embeddings generated successfully.")
+    tickets = collection.find({})
+    updated_count = 0
+
+    for ticket in tickets:
+        text_for_embedding = f"""
+Title: {ticket.get('title', '')}
+Description: {ticket.get('description', '')}
+Category: {ticket.get('category', '')}
+Priority: {ticket.get('priority', '')}
+""".strip()
+
+        embedding = generate_embedding(openai_client, embedding_deployment, text_for_embedding)
+
+        collection.update_one(
+            {"_id": ticket["_id"]},
+            {
+                "$set": {
+                    "embedding": embedding,
+                    "embeddingText": text_for_embedding,
+                }
+            },
+        )
+
+        print(f"Updated embedding for {ticket['ticketId']}")
+        updated_count += 1
+
+    mongo_client.close()
+    print(f"All embeddings generated successfully. Updated {updated_count} documents.")
+
+
+if __name__ == "__main__":
+    main()

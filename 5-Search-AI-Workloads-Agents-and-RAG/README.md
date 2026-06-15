@@ -409,6 +409,20 @@ However, their embeddings will be very similar because their meaning is similar.
 
 Generate embeddings for every document using Azure OpenAI.
 
+Run the standalone script from the repository root:
+
+```powershell
+python .\embeddinggene.py
+```
+
+Before running it, make sure `.env` contains:
+
+- `DOCUMENTDB_CONNECTION_STRING`
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_API_KEY`
+- `AZURE_OPENAI_API_VERSION`
+- `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
+
 Store the vector in:
 
 ```text
