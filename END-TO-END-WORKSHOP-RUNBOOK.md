@@ -804,7 +804,23 @@ db.mobiles.aggregate([
 
 This validates aggregation, grouping, and sorting behavior.
 
-### 5. Capture explain plan before index
+### 5. Reset `mobiles` indexes for this exercise
+
+If you previously ran an older loader or already created indexes, remove secondary indexes first.
+
+Run:
+
+```javascript
+db.mobiles.getIndexes()
+db.mobiles.dropIndexes()
+db.mobiles.getIndexes()
+```
+
+Expected:
+
+- Only the default `_id_` index should remain.
+
+### 6. Capture explain plan before index
 
 Run:
 
@@ -814,10 +830,11 @@ db.mobiles.find({ segment: "Premium" }).explain("executionStats")
 
 Check in the output:
 
-- Query plan shape (often collection scan before creating index).
-- `totalDocsExamined` and `nReturned` values.
+- Query plan shape should show collection scan before creating index.
+- `totalDocsExamined` should be close to the full collection size (typically 30).
+- `nReturned` should be lower than `totalDocsExamined` because only matching documents are returned.
 
-### 6. Create index and validate impact
+### 7. Create index and validate impact
 
 Create index:
 
