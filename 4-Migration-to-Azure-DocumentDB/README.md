@@ -242,6 +242,9 @@ This workload will help demonstrate Azure DMS change replication during Online M
 
 # Part 5: Online Migration
 
+> Important: Complete **Part 4: Generate Live Workload** before starting Part 5.
+> The online migration and cutover validation depend on active source-side change activity.
+
 Repeat the migration steps performed earlier.
 
 Navigate again to:
