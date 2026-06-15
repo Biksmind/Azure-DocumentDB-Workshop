@@ -1,23 +1,43 @@
+from pathlib import Path
+import os
+
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from openai import AzureOpenAI
 
 # -----------------------------
+ROOT_DIR = Path(__file__).resolve().parent
+load_dotenv(ROOT_DIR / ".env")
+
+
+def require_env(name: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(
+            f"Missing required environment variable: {name}. Copy .env.template to .env in {ROOT_DIR} and fill in the workshop values."
+        )
+    if value.startswith("<") and value.endswith(">"):
+        raise RuntimeError(f"{name} is still a placeholder in .env. Replace it with a real value and rerun.")
+    if value.strip() in {'""', "''"}:
+        raise RuntimeError(f"{name} is empty in .env. Replace it with a real value and rerun.")
+    return value
+
+
 # Azure OpenAI Configuration
 # -----------------------------
-AZURE_OPENAI_ENDPOINT = "https://<your-openai-resource>.openai.azure.com/"
-AZURE_OPENAI_KEY = "<your-azure-openai-key>"
-AZURE_OPENAI_API_VERSION = "2024-02-01"
+AZURE_OPENAI_ENDPOINT = require_env("AZURE_OPENAI_ENDPOINT")
+AZURE_OPENAI_KEY = require_env("AZURE_OPENAI_API_KEY")
+AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview")
 
-EMBEDDING_DEPLOYMENT = "text-embedding-3-small"
-CHAT_DEPLOYMENT = "gpt-4.1-mini"
-# Example: gpt-4o-mini or gpt-4o
+EMBEDDING_DEPLOYMENT = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small")
+CHAT_DEPLOYMENT = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT", "gpt-4.1-mini")
 
 # -----------------------------
 # Azure DocumentDB Configuration
 # -----------------------------
-MONGO_URI = "<your-documentdb-connection-string>"
+MONGO_URI = require_env("DOCUMENTDB_CONNECTION_STRING")
 
-DB_NAME = "Workshop_DB"
+DB_NAME = os.getenv("DOCUMENTDB_DATABASE", "Workshop_DB")
 COLLECTION_NAME = "supportInc"
 
 # -----------------------------

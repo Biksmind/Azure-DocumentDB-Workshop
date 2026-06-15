@@ -2026,6 +2026,8 @@ Before running the RAG app, make sure you have already completed:
 3. Created the vector index on the `embedding` field
 4. Confirmed that vector search works
 
+The checked-in `rag_app.py` reads configuration from `.env`. Replace any template values like `<your-documentdb-connection-string>` and `<your-openai-resource>` before running it.
+
 You also need these Python packages:
 
 ```bash
