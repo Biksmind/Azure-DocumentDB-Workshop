@@ -869,42 +869,174 @@ exit
 
 Use this module during Slot 3.
 
-Primary migration runbook:
+## Objective
 
-- `7-Migration/README.md`
+In this exercise, you will migrate data from an existing MongoDB environment to Azure DocumentDB using the Azure DocumentDB Migration extension in Visual Studio Code.
 
-Detailed source reference:
+You will perform:
 
-- `https://github.com/Biksmind/DocumentDB_Workshop_0906/blob/main/MongoDB-to-Azure-DocumentDB-Migration-Workshop.md`
+1. Pre-Migration Assessment
+2. Offline Migration
+3. Online Migration
+4. Application Cutover Validation
 
-### 1. Run pre-migration assessment (VS Code extension)
+---
 
-1. Connect to source MongoDB from VS Code DocumentDB extension.
-2. Right-click source cluster and select **Data Migration**.
-3. Choose **Pre-Migration Assessment for Azure DocumentDB**.
-4. Run validation and review the compatibility findings.
+## Prerequisites
 
-### 2. Run offline migration (DMS path)
+### MongoDB Source Connection
 
-1. Start **Migrate to Azure DocumentDB** from the same source cluster.
-2. Select migration mode **Offline**.
-3. Select target subscription, resource group, and Azure DocumentDB cluster.
-4. Configure or reuse Azure DMS.
-5. Confirm firewall access for both source and target.
-6. Select databases and collections, then start migration.
-7. Wait for migration status to become `Succeeded`.
+Connect to the MongoDB source using the following connection string:
 
-### 3. Run online migration and cutover
+```text
+mongodb://readonly:drinkchaidaily123@20.71.118.158:27017/?directConnection=true
+```
 
-1. Create a new migration job in **Online** mode.
-2. Reuse DMS and complete target/firewall/database steps.
-3. Monitor until status becomes `Ready To Cutover`.
-4. Stop source writes or stop the workload generator.
-5. Trigger cutover and confirm final status is `Succeeded`.
+> Note: If credentials are not provided during the workshop, please obtain them from the workshop sponsors.
 
-### 4. Validate migrated data
+---
 
-Connect to target and run:
+## Part 1: Connect to MongoDB using VS Code
+
+1. Open Visual Studio Code.
+2. Open the DocumentDB for VS Code Extension.
+3. Create a new MongoDB connection using the provided connection string.
+4. Verify that the MongoDB cluster appears in the Connections pane.
+
+Once connected successfully, proceed to the migration workflow.
+
+---
+
+## Part 2: Pre-Migration Assessment
+
+Before performing any migration, run a compatibility assessment against Azure DocumentDB.
+
+### Launch Assessment
+
+1. Right-click the MongoDB cluster.
+2. Select **Data Migration**.
+3. If prompted, install the **Azure DocumentDB Migration** extension.
+4. After installation, select **Pre-Migration Assessment for Azure DocumentDB**.
+
+### Validate Source Environment
+
+1. Verify the MongoDB source connection.
+2. Click **Run Validation**.
+3. Wait for validation to complete.
+
+### Create Assessment
+
+1. Enter an Assessment Name.
+2. Optionally specify:
+   - Report Path
+   - Log Path
+3. Click **Start Assessment**.
+
+The assessment process will analyze your MongoDB deployment and identify compatibility considerations.
+
+### Review Assessment Results
+
+1. Open the completed assessment.
+2. Download the assessment report.
+3. Review:
+   - Compatibility findings
+   - Unsupported features
+   - Migration recommendations
+
+After reviewing the report, close the assessment window.
+
+---
+
+## Part 3: Offline Migration
+
+Now perform a full offline migration.
+
+### Create Migration Job
+
+1. Right-click the MongoDB cluster again.
+2. Select **Migrate to Azure DocumentDB**.
+3. The Create Migration Job wizard opens.
+
+### Configure Migration Job
+
+Provide:
+
+- Migration Job Name
+- Migration Mode: **Offline**
+- Network Connectivity: **Public**
+
+For this workshop use:
+
+- Offline Migration
+- Public Connectivity
+
+> Source connection string is optional because the extension can use the existing connection.
+
+Click **Next**.
+
+### Configure Target Environment
+
+Provide Azure DocumentDB target details:
+
+- Subscription
+- Resource Group
+- Azure DocumentDB Cluster
+
+Click **Next**.
+
+### Configure Azure DMS
+
+Migration uses Azure Database Migration Service (DMS).
+
+If DMS already exists:
+
+- Select the existing DMS instance.
+
+Otherwise:
+
+- Create a new DMS instance in the same subscription and resource group.
+
+Click **Next**.
+
+### Firewall Configuration
+
+Update source and target firewall rules when prompted.
+
+Ensure:
+
+- MongoDB source is reachable
+- Azure DocumentDB target is reachable
+
+Click **Next**.
+
+### Select Databases and Collections
+
+Choose:
+
+- Database(s)
+- Collection(s)
+
+Select the migration action.
+
+Click **Start Migration**.
+
+### Monitor Migration
+
+Azure will provision migration resources in the background.
+
+This may take several minutes.
+
+Monitor the migration status.
+
+Wait until the migration status becomes:
+
+```text
+Succeeded
+```
+
+### Validate Migrated Data
+
+Connect to Azure DocumentDB and run:
 
 ```javascript
 use <your_database_name>
@@ -914,14 +1046,225 @@ db.getCollectionNames().forEach(function(c) {
 });
 ```
 
-### 5. Use command-line migration: mongodump/mongorestore
+Verify collection counts between source and target.
 
-```powershell
-mongodump --uri "<source_mongodb_connection_string>" --out .\dump
-mongorestore --uri "<target_azure_documentdb_connection_string>" .\dump
+---
+
+## Part 4: Generate Live Workload
+
+Before performing Online Migration, generate ongoing database activity.
+
+### Launch Sample Application
+
+Open:
+
+```text
+https://mongocsgen-app1.azurewebsites.net/
 ```
 
-After restore, run the same collection-count validation query on the target.
+### Generate Activity
+
+The workshop administrator will start the workload generator.
+
+Participants should observe:
+
+- Continuous inserts
+- Updates
+- Deletes
+- Increasing document counts
+
+This workload helps demonstrate Azure DMS change replication during Online Migration.
+
+---
+
+## Part 5: Online Migration
+
+Complete Part 4 before starting Part 5.
+
+Repeat the migration steps performed earlier.
+
+Navigate again to:
+
+```text
+MongoDB Cluster
+→ Data Migration
+→ Migrate to Azure DocumentDB
+```
+
+### Configure Online Migration
+
+Provide:
+
+- Migration Job Name
+- Migration Mode: Online
+- Network Connectivity: Public
+
+Since DMS was already created during Offline Migration:
+
+- Reuse the existing DMS instance.
+
+Proceed through:
+
+- Target Configuration
+- Firewall Updates
+- Database Selection
+- Collection Selection
+
+Start Migration.
+
+### Monitor Migration Progress
+
+You will observe the following migration states:
+
+```text
+Provisioning
+```
+
+↓
+
+```text
+Bulk Copy In Progress
+```
+
+↓
+
+```text
+Replication In Progress
+```
+
+↓
+
+```text
+Ready To Cutover
+```
+
+During Replication:
+
+- New inserts are copied continuously.
+- Updates are synchronized.
+- Deletes are synchronized.
+
+This keeps Azure DocumentDB in sync with the source MongoDB environment.
+
+---
+
+## Part 6: Cutover
+
+Once migration reaches `Ready To Cutover`, perform the following steps.
+
+### Stop Application Workload
+
+Before cutover:
+
+1. Stop the workload generator.
+2. Allow remaining changes to synchronize.
+
+This ensures no new writes occur during final synchronization.
+
+### Perform Cutover
+
+Click:
+
+```text
+Cutover
+```
+
+Migration status changes through:
+
+```text
+Ready To Cutover
+```
+
+↓
+
+```text
+Completing
+```
+
+↓
+
+```text
+Succeeded
+```
+
+---
+
+## Part 7: Final Data Validation
+
+Run the same validation query against Azure DocumentDB:
+
+```javascript
+use <your_database_name>
+
+db.getCollectionNames().forEach(function(c) {
+  print(c + ": " + db.getCollection(c).countDocuments());
+});
+```
+
+Verify:
+
+- Collection counts match source.
+- No pending replication items remain.
+- Migration status is successful.
+
+---
+
+## Part 8: Application Migration Validation
+
+One of the key benefits of Azure DocumentDB is MongoDB compatibility.
+
+No application code changes are required.
+
+### Test Application Connectivity
+
+Update only the application connection string.
+
+#### Before
+
+```text
+MongoDB Connection String
+```
+
+#### After
+
+```text
+Azure DocumentDB Connection String
+```
+
+No code modifications are necessary.
+
+### Verify Application Functionality
+
+Perform the following operations:
+
+- Create Records
+- Read Records
+- Update Records
+- Delete Records
+
+Observe that the application continues to function normally against Azure DocumentDB.
+
+---
+
+## Expected Outcome
+
+At the end of this lab, you will have successfully:
+
+✅ Assessed MongoDB compatibility
+
+✅ Performed Offline Migration
+
+✅ Performed Online Migration
+
+✅ Executed Production Cutover
+
+✅ Validated Data Consistency
+
+✅ Connected Existing MongoDB Application to Azure DocumentDB
+
+✅ Verified Application Functionality without Code Changes
+
+This demonstrates a complete MongoDB to Azure DocumentDB migration workflow using Azure Database Migration Service (DMS) and the Azure DocumentDB VS Code Migration Extension.
 
 ## Module 4A: Use pre-generated embeddings
 
