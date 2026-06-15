@@ -64,7 +64,7 @@ mongosh "<your_connection_string>"
 ```javascript
 use Workshop_DB
 db.mobiles.countDocuments()
-db.support_articles.countDocuments()
+db.supportInc.countDocuments()
 db.retail_offers.countDocuments()
 ```
 
@@ -132,3 +132,4 @@ You have loaded data, validated queries, run aggregations, and verified index im
 Continue to:
 
 - `../4-Migration-to-Azure-DocumentDB/README.md`
+

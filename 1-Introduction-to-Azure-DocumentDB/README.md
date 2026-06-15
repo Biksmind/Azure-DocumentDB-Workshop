@@ -27,7 +27,7 @@ By the end of this module, you will be able to:
 1. Read the architecture flow in `README.md`.
 2. Confirm the data entities used in this workshop:
    - `mobiles`
-   - `support_articles`
+   - `supportInc`
    - `retail_offers`
 
 ### Step 3: Review the day agenda
@@ -79,3 +79,4 @@ You have a clear understanding of workshop scope, sequence, and required setup b
 Continue to:
 
 - `../2-Azure-DocumentDB-Cluster-Setup-and-Connectivity/README.md`
+

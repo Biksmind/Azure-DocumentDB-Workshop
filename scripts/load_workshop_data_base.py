@@ -2,7 +2,7 @@
 
 This script loads the base data only:
   - mobiles
-  - support_articles
+  - supportInc
   - retail_offers
 
 NO indexes are created. Students create indexes manually during Module 2 exercises.
@@ -118,11 +118,11 @@ def main() -> None:
     print(f"Loaded or updated {mobiles_written} mobile documents in {database_name}.mobiles")
 
     print(f"Loading support articles from {support_path}...")
-    support_articles = load_json(support_path)
-    support_written = upsert_by_article_id(db.support_articles, support_articles)
+    supportInc = load_json(support_path)
+    support_written = upsert_by_article_id(db.supportInc, supportInc)
     print(
         f"Loaded or updated {support_written} support articles "
-        f"in {database_name}.support_articles"
+        f"in {database_name}.supportInc"
     )
 
     print(f"Loading retail offers from {offers_path}...")
@@ -133,7 +133,7 @@ def main() -> None:
     print("\nVerification:")
     print(f"  Database: {database_name}")
     print(f"  mobiles count: {db.mobiles.count_documents({})}")
-    print(f"  support_articles count: {db.support_articles.count_documents({})}")
+    print(f"  supportInc count: {db.supportInc.count_documents({})}")
     print(f"  retail_offers count: {db.retail_offers.count_documents({})}")
 
     client.close()
@@ -142,3 +142,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

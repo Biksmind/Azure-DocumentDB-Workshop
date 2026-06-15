@@ -72,8 +72,8 @@ def main() -> None:
         name="mobile_text_index",
     )
 
-    print("Creating text index on support_articles...")
-    db.support_articles.create_index(
+    print("Creating text index on supportInc...")
+    db.supportInc.create_index(
         [
             ("title", "text"),
             ("product", "text"),
@@ -91,11 +91,11 @@ def main() -> None:
             "No mobiles.contentVector found. Run: python .\\scripts\\generate_workshop_embeddings.py"
         )
 
-    if db.support_articles.count_documents({"contentVector": {"$exists": True}}, limit=1) > 0:
-        create_vector_index(db, "support_articles", "contentVector", "support_vector_index", dimensions)
+    if db.supportInc.count_documents({"contentVector": {"$exists": True}}, limit=1) > 0:
+        create_vector_index(db, "supportInc", "contentVector", "support_vector_index", dimensions)
     else:
         raise RuntimeError(
-            "No support_articles.contentVector found. Run: python .\\scripts\\generate_workshop_embeddings.py"
+            "No supportInc.contentVector found. Run: python .\\scripts\\generate_workshop_embeddings.py"
         )
 
     print("Creating retail offer lookup indexes...")
@@ -109,3 +109,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

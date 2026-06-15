@@ -2,7 +2,7 @@
 
 This script updates:
   - Workshop_DB.mobiles.contentVector
-  - Workshop_DB.support_articles.contentVector
+  - Workshop_DB.supportInc.contentVector
 
 Requirements:
   - DOCUMENTDB_CONNECTION_STRING
@@ -100,20 +100,21 @@ def main() -> None:
         db.mobiles.update_one({"_id": document["_id"]}, {"$set": {"contentVector": vector}})
         mobile_total += 1
 
-    print("Generating embeddings for support_articles...")
+    print("Generating embeddings for supportInc...")
     support_total = 0
-    for document in db.support_articles.find({}, {"_id": 1, "articleId": 1, "title": 1, "product": 1, "category": 1, "severity": 1, "content": 1, "tags": 1}):
+    for document in db.supportInc.find({}, {"_id": 1, "articleId": 1, "title": 1, "product": 1, "category": 1, "severity": 1, "content": 1, "tags": 1}):
         text = build_support_text(document)
         vector = create_embedding(openai_client, embedding_deployment, text, embedding_dimensions)
-        db.support_articles.update_one({"_id": document["_id"]}, {"$set": {"contentVector": vector}})
+        db.supportInc.update_one({"_id": document["_id"]}, {"$set": {"contentVector": vector}})
         support_total += 1
 
     mongo_client.close()
 
     print(f"Updated mobiles embeddings: {mobile_total}")
-    print(f"Updated support_articles embeddings: {support_total}")
+    print(f"Updated supportInc embeddings: {support_total}")
     print("Embedding generation complete.")
 
 
 if __name__ == "__main__":
     main()
+

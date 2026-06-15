@@ -264,7 +264,7 @@ The folder contains:
 | File | Collection | Documents |
 |---|---|---|
 | `sample-docs\mobiles_sample.json` | `mobiles` | 30 mobile phones across Budget, Mid Range, Premium, Foldable, and Gaming segments |
-| `sample-docs\support_articles_sample.json` | `support_articles` | 30 knowledge-base articles covering Battery, Camera, Connectivity, Bluetooth, Payments, and more |
+| `sample-docs\support_articles_sample.json` | `supportInc` | 30 knowledge-base articles covering Battery, Camera, Connectivity, Bluetooth, Payments, and more |
 | `sample-docs\retail_offers_sample.json` | `retail_offers` | 30 phones with retailer offer details |
 
 #### Step 1: Create the collections
@@ -275,7 +275,7 @@ The folder contains:
 use Workshop_DB
 
 db.createCollection("mobiles")
-db.createCollection("support_articles")
+db.createCollection("supportInc")
 db.createCollection("retail_offers")
 ```
 
@@ -294,7 +294,7 @@ show collections
 use Workshop_DB
 
 db.mobiles.insertMany([ /* paste contents of mobiles_sample.json here */ ])
-db.support_articles.insertMany([ [
+db.supportInc.insertMany([ [
   {
     "articleId": "KB001",
     "title": "Battery drains quickly after software update",
@@ -578,11 +578,11 @@ db.retail_offers.insertMany([ /* paste contents of retail_offers_sample.json her
 3. Expand **Databases** and click **Workshop_DB** to select the workshop database.
 4. Expand **Workshop_DB** so you can see the collections created in Step 1:
   - `mobiles`
-  - `support_articles`
+  - `supportInc`
   - `retail_offers`
 
-5. Import records into `support_articles`:
-  - Right-click **support_articles**.
+5. Import records into `supportInc`:
+  - Right-click **supportInc**.
   - Click **Import Documents...**.
   - Select `sample-docs\support_articles_sample.json`.
 6. Import records into `retail_offers`:
@@ -598,7 +598,7 @@ In `mongosh`:
 ```javascript
 use Workshop_DB
 db.mobiles.countDocuments()           // expect 30
-db.support_articles.countDocuments()  // expect 30
+db.supportInc.countDocuments()  // expect 30
 db.retail_offers.countDocuments()     // expect 30
 ```
 
@@ -611,7 +611,7 @@ You should see 30 documents in each collection.
 > ```javascript
 > use Workshop_DB
 > db.mobiles.drop()
-> db.support_articles.drop()
+> db.supportInc.drop()
 > db.retail_offers.drop()
 > ```
 
@@ -759,7 +759,7 @@ This script loads data only, without any indexes. You will create indexes manual
 This script loads or updates:
 
 - `mobiles`
-- `support_articles`
+- `supportInc`
 - `retail_offers`
 
 ### 2. Confirm data is present
@@ -769,13 +769,13 @@ Run:
 ```javascript
 show collections
 db.mobiles.countDocuments()
-db.support_articles.countDocuments()
+db.supportInc.countDocuments()
 db.retail_offers.countDocuments()
 ```
 
 Expected:
 
-- Collections include `mobiles`, `support_articles`, and `retail_offers`.
+- Collections include `mobiles`, `supportInc`, and `retail_offers`.
 - Each collection should have records (typically 30 each when sample data is loaded).
 
 ### 3. Run a basic `find` query
@@ -1281,7 +1281,7 @@ python .\scripts\load_workshop_data_base.py
 This loads:
 
 - `mobiles`
-- `support_articles`
+- `supportInc`
 - `retail_offers`
 
 ### 2. Generate embeddings
@@ -1302,7 +1302,7 @@ python .\scripts\generate_workshop_embeddings.py
 This writes `contentVector` to documents in:
 
 - `mobiles`
-- `support_articles`
+- `supportInc`
 
 ### 3. Create indexes
 
@@ -1396,8 +1396,8 @@ db.mobiles.createIndex(
   { name: "mobile_text_index" }
 )
 
-// Create text index for support articles (required for db.support_articles.find({ $text: ... })).
-db.support_articles.createIndex(
+// Create text index for support articles (required for db.supportInc.find({ $text: ... })).
+db.supportInc.createIndex(
   {
     title: "text",
     product: "text",
@@ -1459,7 +1459,7 @@ Run the same type of query on support articles:
 
 ```javascript
 // Full-text search on support articles.
-db.support_articles.find(
+db.supportInc.find(
   { $text: { $search: "battery update" } },
   {
     // Relevance score for each article.
@@ -1492,7 +1492,7 @@ Use this query first as a baseline. It matches literal words in the `content` fi
 ```javascript
 // Keyword baseline: regex/contains style matching.
 // This checks whether "battery" OR "update" appears in content.
-db.support_articles.find(
+db.supportInc.find(
   {
     $or: [
       { content: /battery/i },
@@ -1587,7 +1587,7 @@ This support app is intentionally simpler than the mobile search app. It is desi
 
 What to notice:
 
-- The page is using the `support_articles` collection.
+- The page is using the `supportInc` collection.
 - Keyword search (Step A) depends on literal word matches and usually has no relevance ranking.
 - Full-text search works best when the exact issue words appear in the article and returns text relevance.
 - Vector search works better when the user describes the issue in different words.
@@ -2130,3 +2130,4 @@ http://localhost:8080
 ### Port 8080 already in use
 
 Close the previous app instance or restart PowerShell and run `python app.py` again.
+

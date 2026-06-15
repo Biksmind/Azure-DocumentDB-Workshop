@@ -177,16 +177,16 @@ def main() -> None:
         print("Skipping mobiles vector index: contentVector not present in loaded data.")
 
     print(f"Loading support articles from {support_path}...")
-    support_articles = load_json(support_path)
-    support_have_vectors = has_field(support_articles, "contentVector")
-    support_written = upsert_by_article_id(db.support_articles, support_articles)
+    supportInc = load_json(support_path)
+    support_have_vectors = has_field(supportInc, "contentVector")
+    support_written = upsert_by_article_id(db.supportInc, supportInc)
     print(
         f"Loaded or updated {support_written} support articles "
-        f"in {database_name}.support_articles"
+        f"in {database_name}.supportInc"
     )
 
-    print("Creating full-text index on support_articles...")
-    db.support_articles.create_index(
+    print("Creating full-text index on supportInc...")
+    db.supportInc.create_index(
         [
             ("title", "text"),
             ("product", "text"),
@@ -196,21 +196,21 @@ def main() -> None:
         ],
         name="support_text_index",
     )
-    print("Created text index: support_articles.support_text_index")
+    print("Created text index: supportInc.support_text_index")
 
     print("Skipping support article filter indexes (students will create these during hands-on exercises)")
 
     if support_have_vectors:
-        print("Creating DiskANN vector index on support_articles.contentVector...")
+        print("Creating DiskANN vector index on supportInc.contentVector...")
         create_vector_index(
             db,
-            "support_articles",
+            "supportInc",
             "contentVector",
             "support_vector_index",
             dimensions,
         )
     else:
-        print("Skipping support_articles vector index: contentVector not present in loaded data.")
+        print("Skipping supportInc vector index: contentVector not present in loaded data.")
 
     print(f"Loading retail offers from {offers_path}...")
     offers = load_json(offers_path)
@@ -222,7 +222,7 @@ def main() -> None:
     db.retail_offers.create_index("offers.retailer", name="offer_retailer_index")
     db.retail_offers.create_index("offers.availability", name="offer_availability_index")
     print("Skipping retail offer indexes (students will create these during hands-on exercises)_documents({})}")
-    print(f"  support_articles count: {db.support_articles.count_documents({})}")
+    print(f"  supportInc count: {db.supportInc.count_documents({})}")
     print(f"  retail_offers count: {db.retail_offers.count_documents({})}")
     print("  mobile indexes:")
     for index in db.mobiles.list_indexes():
@@ -234,3 +234,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

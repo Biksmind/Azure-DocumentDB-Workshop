@@ -34,15 +34,15 @@ def main() -> None:
     print("Ping:", db.command({"ping": 1}))
 
     mobiles_count = db.mobiles.count_documents({})
-    support_count = db.support_articles.count_documents({})
+    support_count = db.supportInc.count_documents({})
     offers_count = db.retail_offers.count_documents({})
     mobile_indexes = {index["name"] for index in db.mobiles.list_indexes()}
-    support_indexes = {index["name"] for index in db.support_articles.list_indexes()}
+    support_indexes = {index["name"] for index in db.supportInc.list_indexes()}
     offer_indexes = {index["name"] for index in db.retail_offers.list_indexes()}
 
     checks = [
         ("mobiles collection has 30 documents", mobiles_count == 30),
-        ("support_articles collection has 30 documents", support_count == 30),
+        ("supportInc collection has 30 documents", support_count == 30),
         ("retail_offers collection has 30 documents", offers_count == 30),
         ("mobile_text_index exists", "mobile_text_index" in mobile_indexes),
         ("vector_index exists", "vector_index" in mobile_indexes),
@@ -62,7 +62,7 @@ def main() -> None:
 
     print("\nCounts:")
     print(f"  mobiles: {mobiles_count}")
-    print(f"  support_articles: {support_count}")
+    print(f"  supportInc: {support_count}")
     print(f"  retail_offers: {offers_count}")
 
     client.close()
@@ -80,3 +80,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

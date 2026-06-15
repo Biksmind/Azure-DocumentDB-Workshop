@@ -7,7 +7,7 @@ This folder contains sample documents for the three Azure DocumentDB workshop co
 | File | Collection | Documents |
 |---|---|---|
 | `mobiles_sample.json` | `mobiles` | 30 mobile phones across Budget, Mid Range, Premium, Foldable, and Gaming segments |
-| `support_articles_sample.json` | `support_articles` | 30 knowledge-base articles covering Battery, Camera, Connectivity, Bluetooth, Payments, and more |
+| `support_articles_sample.json` | `supportInc` | 30 knowledge-base articles covering Battery, Camera, Connectivity, Bluetooth, Payments, and more |
 | `retail_offers_sample.json` | `retail_offers` | 30 phones with retailer offer details |
 | `headsets_sample.json` | `headsets` | 30 headsets across Over-ear, True Wireless, Gaming, and Studio categories for performance demo |
 
@@ -36,7 +36,7 @@ mongoimport --uri "<CONNECTION_STRING>" `
 
 # support articles
 mongoimport --uri "<CONNECTION_STRING>" `
-  --db Workshop_DB --collection support_articles `
+  --db Workshop_DB --collection supportInc `
   --file .\sample-docs\support_articles_sample.json `
   --jsonArray
 
@@ -61,7 +61,7 @@ use Workshop_DB
 
 // Copy-paste the JSON array from any sample file directly into mongosh
 db.mobiles.insertMany([ /* paste mobiles_sample.json content here */ ])
-db.support_articles.insertMany([ /* paste support_articles_sample.json content here */ ])
+db.supportInc.insertMany([ /* paste support_articles_sample.json content here */ ])
 db.retail_offers.insertMany([ /* paste retail_offers_sample.json content here */ ])
 ```
 
@@ -72,7 +72,7 @@ In `mongosh`:
 ```javascript
 use Workshop_DB
 db.mobiles.countDocuments()           // expect 30
-db.support_articles.countDocuments()  // expect 30
+db.supportInc.countDocuments()  // expect 30
 db.retail_offers.countDocuments()     // expect 30
 ```
 
@@ -83,7 +83,7 @@ The sample documents cover the complete workshop dataset. If you still want to r
 ```javascript
 use Workshop_DB
 db.mobiles.drop()
-db.support_articles.drop()
+db.supportInc.drop()
 db.retail_offers.drop()
 ```
 
@@ -92,3 +92,4 @@ Then run:
 ```powershell
 python .\scripts\load_workshop_data.py
 ```
+
