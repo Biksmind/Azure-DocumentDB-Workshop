@@ -2890,6 +2890,79 @@ RAG uses Vector Search to retrieve relevant business data and then uses an LLM t
 
 This is the foundation for building modern AI-native applications on Azure DocumentDB.
 
+## Module 4B: Run AI agents
+
+From PowerShell, go to the mobile agents folder:
+
+```powershell
+cd .\4-AI-Agents\mobile-agents
+python app.py
+```
+
+If the browser opens automatically, use it.
+
+If not, open:
+
+```text
+http://localhost:8080
+```
+
+You should see two agents:
+
+- `MobileAdvisor`
+- `RetailOfferFinder`
+
+### Test MobileAdvisor
+
+1. Click **MobileAdvisor**.
+2. Paste:
+
+  ```text
+  Recommend a phone under 50000 for camera and battery
+  ```
+
+3. Press **Enter**.
+4. Try:
+
+  ```text
+  I need a gaming phone with fast charging
+  ```
+
+5. Try:
+
+  ```text
+  Tell me about Samsung Galaxy S24 Ultra
+  ```
+
+### Test RetailOfferFinder
+
+1. Go back to the agent list.
+2. Click **RetailOfferFinder**.
+3. Paste:
+
+  ```text
+  Where can I buy OnePlus 12?
+  ```
+
+4. Press **Enter**.
+5. Try:
+
+  ```text
+  What mobiles are available from Flipkart?
+  ```
+
+To stop the app, go to PowerShell and press:
+
+```text
+Ctrl+C
+```
+
+Return to the repository root:
+
+```powershell
+cd ..\..
+```
+
 ## Extended Module 5: Performance checks
 
 This module demonstrates how indexes dramatically improve query performance using a dedicated `headsets` collection.
