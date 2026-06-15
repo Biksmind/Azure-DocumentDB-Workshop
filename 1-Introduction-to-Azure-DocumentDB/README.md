@@ -44,7 +44,21 @@ By the end of this module, you will be able to:
    - Python 3.10+
    - `mongosh`
    - Git
-2. Verify that your target cluster tier for vector search is M30 or higher.
+
+If these tools are missing on your VM, run this setup script in an elevated PowerShell terminal:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install_vm_prerequisites.ps1
+```
+
+After the script completes, open a new terminal and verify:
+
+```powershell
+code --version
+python --version
+mongosh --version
+git --version
+```
 
 ### Step 5: Understand module flow
 
