@@ -22,7 +22,7 @@ By the end of this workshop, you will be able to:
 
 ## What you will build
 
-You will build a mobile shopping assistant using Azure DocumentDB with pre-generated workshop embeddings and sample data.
+You will build a mobile shopping assistant using Azure DocumentDB with workshop sample data, generated embeddings, migration validation, and AI agents.
 
 The workshop flow is:
 
@@ -30,11 +30,13 @@ The workshop flow is:
 Create Azure resources
   -> connect from VS Code
   -> prepare local Python environment
-   -> verify pre-generated embedding files
+  -> generate embeddings
   -> load mobile catalog data
   -> run basic queries
+  -> run migration workflow (assessment, offline, online, cutover)
   -> run full-text search
   -> run vector search
+  -> run hybrid search and RAG patterns
   -> run AI agents
   -> review performance and security
   -> cleanup
