@@ -597,7 +597,7 @@ Open PowerShell and go to the folder where you cloned this repository.
 Example:
 
 ```powershell
-cd C:\Users\<your-user>\source\repos\DocumentDB-Workshop
+cd C:\Users\\source\repos\DocumentDB-Workshop
 ```
 
 Check that you are in the right folder:
