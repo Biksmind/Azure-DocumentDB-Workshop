@@ -669,12 +669,13 @@ You should see:
 
 ```text
 README.md
-1-Introduction
-2-NoSQL-Core-Concepts
-3-AI-Vector-Search
-4-AI-Agents
-5-Performance-and-Cost-Optimization
-6-Security-RBAC
+END-TO-END-WORKSHOP-RUNBOOK.md
+1-Introduction-to-Azure-DocumentDB
+2-Azure-DocumentDB-Cluster-Setup-and-Connectivity
+3-Data-Modeling-Data-Import-Querying-and-Indexing
+4-Migration-to-Azure-DocumentDB
+5-Search-AI-Workloads-Agents-and-RAG
+sample-docs
 scripts
 ```
 
